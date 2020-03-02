@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mutong.jcommunity.mapper.LoginTicketMapper">
+
+
+    <sql id="insertFields">
+        user_id, ticket , status,expired
+    </sql>
+
+    <sql id="selectFields">
+        id, user_id, ticket, status,expired
+    </sql>
+
+    <insert id="insertLoginTicket" parameterType="LoginTicket" keyProperty="id">
+        insert into login_ticket (<include refid="insertFields"></include>)
+        values(#{userId}, #{ticket}, #{status}, #{expired})
+    </insert>
+    <!--<insert id="insertLoginTicket" parameterType="LoginTicket"  keyProperty="id">-->
+        <!--insert into login_ticket (<include refid="insertFields"></include>)-->
+        <!--values (#{userId}, #{ticket}, #{status}, #{expired})-->
+    <!--</insert>-->
+    <!--<insert id="insertUser" parameterType="User" keyProperty="id">
+        insert into user (<include refid="insertFields"></include>)
+        values(#{username}, #{password}, #{salt}, #{email}, #{type}, #{status}, #{activationCode}, #{headerUrl}, #{createTime})
+    </insert>-->
+    <select id="selectByTicket" parameterType="String" resultType="LoginTicket">
+        select <include refid="selectFields"></include>
+        from login_ticket
+        where ticket = #{ticket}
+    </select>
+    <update id="updateStatus">
+        update login_ticket set status=#{status} where ticket = #{ticket}
+    </update>
+
+</mapper>

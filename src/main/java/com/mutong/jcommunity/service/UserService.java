@@ -110,11 +110,11 @@ public class UserService {
         // 激活邮件
         Context context = new Context();
         context.setVariable("email", user.getEmail());
-        // http://localhost:8080/community/activation/101/code
+        // http://localhost:8080/jcommunity/activation/101/code
         String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
-        mailClient.sendMail(user.getEmail(), "激活账号", content);
+        mailClient.sendMail(user.getEmail(), "激活您的木同社区账号", content);
         return map;
     }
     /**

@@ -1,5 +1,6 @@
 package com.mutong.jcommunity.controller;
 
+import com.mutong.jcommunity.annotation.LoginRequired;
 import com.mutong.jcommunity.model.User;
 import com.mutong.jcommunity.service.UserService;
 import com.mutong.jcommunity.util.CommunityUtil;
@@ -49,11 +50,13 @@ public class UserController {
     @Autowired
     private HostHolder hostHolder;
 
+    @LoginRequired
     @GetMapping("/setting")
     public String getSettingPage(){
         return "/site/setting";
     }
 
+    @LoginRequired
     @PostMapping("/upload")
     public String uploadHeader(MultipartFile headerImage, Model model){
         if (headerImage == null){
@@ -84,6 +87,7 @@ public class UserController {
         userService.updateHeader(user.getId(),headUrl);
         return "redirect:/index";
     }
+
 
     @GetMapping("/header/{fileName}")
     public void getHeader(@PathVariable("fileName")String fileName, HttpServletResponse response){

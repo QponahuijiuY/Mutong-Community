@@ -22,7 +22,7 @@ public class FileSizeConfig {
         //允许上传的文件最大值
         factory.setMaxFileSize(DataSize.parse("102400KB")); //KB,MB
         /// 设置总上传数据总大小
-        factory.setMaxRequestSize(DataSize.parse("50MB"));
+        factory.setMaxRequestSize(DataSize.parse("500MB"));
         return factory.createMultipartConfig();
     }
 

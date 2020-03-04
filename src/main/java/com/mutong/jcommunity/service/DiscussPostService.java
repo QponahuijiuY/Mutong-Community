@@ -17,9 +17,9 @@ import java.util.List;
  */
 @Service
 public class DiscussPostService {
+
     @Autowired
     private DiscussPostMapper discussPostMapper;
-
     @Autowired
     private SensitiveFilter sensitiveFilter;
 
@@ -60,5 +60,24 @@ public class DiscussPostService {
         post.setContent(sensitiveFilter.filter(post.getContent()));
 
         return discussPostMapper.insertDiscussPost(post);
+    }
+
+    /**
+     * 查询帖子
+     * @param id
+     * @return
+     */
+    public DiscussPost findDiscussPostById(int id){
+        return discussPostMapper.selectDiscussPostById(id);
+    }
+
+    /**
+     * 更新帖子评论数量
+     * @param id 帖子id
+     * @param commentCount 帖子数量
+     * @return
+     */
+    public int updateCommentCount(int id,int commentCount){
+        return discussPostMapper.updateCommentCount(id,commentCount);
     }
 }

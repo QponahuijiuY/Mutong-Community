@@ -55,6 +55,7 @@ public class UserService {
     public User findUserById(int id){
         return userMapper.selectById(id);
     }
+
     /**
      * 注册
      * @param user
@@ -94,7 +95,6 @@ public class UserService {
 
         // 注册用户
 
-        user.setUsername(user.getUsername());
         user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
         user.setPassword(CommunityUtil.md5(user.getPassword() + user.getSalt()));
         user.setType(0);
@@ -117,8 +117,9 @@ public class UserService {
         mailClient.sendMail(user.getEmail(), "激活您的木同社区账号", content);
         return map;
     }
+
     /**
-     *
+     * 激活账号
      * @param userId
      * @param code
      * @return
@@ -134,6 +135,7 @@ public class UserService {
             return ACTIVATION_FAILURE;
         }
     }
+
     /**
      * 登录
      * @param username 传过来的username
@@ -182,6 +184,7 @@ public class UserService {
         map.put("ticket" ,loginTicket.getTicket());
         return map;
     }
+
     /**
      * 退出登录
      * @param ticket
@@ -189,6 +192,7 @@ public class UserService {
     public void logout(String ticket) {
         loginTicketMapper.updateStatus(ticket, 1);
     }
+
     /**
      *
      * @param ticket
@@ -197,6 +201,7 @@ public class UserService {
     public LoginTicket findLoginTicket(String ticket) {
         return loginTicketMapper.selectByTicket(ticket);
     }
+
     /**
      *
      * @param userId

@@ -38,7 +38,7 @@ public class IndexController {
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index");
         //list返回一个查询列表
-        List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getoffset(), page.getLimit());
+        List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit());
         List<Map<String, Object>> discussPosts = new ArrayList<>();
         if (list != null){
             //遍历得到每一个discusspost

@@ -17,6 +17,7 @@ public class Message {
     private int toId;
     private String conversationId;
     private String content;
+    //已读,未读,删除
     private int status;
     private Date createTime;
 }

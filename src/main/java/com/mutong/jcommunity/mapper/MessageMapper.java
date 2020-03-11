@@ -59,14 +59,14 @@ public interface MessageMapper {
      * @param message
      * @return
      */
-    int insertMessage(Message message);
+    int insertMessage(@Param("message") Message message);
 
     /**
      * 修改消息的状态
-     * @param isd
+     * @param ids
      * @param status
      * @return
      */
-    int updateStatus(List<Integer> isd, int status);
+    int updateStatus(@Param("ids") List<Integer> ids, @Param("status") int status);
 
 }

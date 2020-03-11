@@ -82,7 +82,28 @@ public class MessageController {
         model.addAttribute("letters",letters);
         //私信的目标
         model.addAttribute("target",getLetterTarget(conversationId));
+
+        //设置已读
+        List<Integer> ids = getLetterIds(letterList);
+        if (!ids.isEmpty()){
+            messageService.readMessage(ids);
+        }
+
+
         return "/site/letter-detail";
+    }
+
+    private List<Integer> getLetterIds(List<Message> letterList){
+        List<Integer> ids = new ArrayList<>();
+
+        if (letterList != null){
+            for (Message message : letterList){
+                if (hostHolder.getUser().getId() == message.getToId() && message.getStatus() == 0){
+                    ids.add(message.getId());
+                }
+            }
+        }
+        return ids;
     }
 
     @RequestMapping(value = "/letter/send", method = RequestMethod.POST)

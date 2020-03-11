@@ -4,7 +4,9 @@ import com.mutong.jcommunity.model.DiscussPost;
 import com.mutong.jcommunity.model.User;
 import com.mutong.jcommunity.provider.Page;
 import com.mutong.jcommunity.service.DiscussPostService;
+import com.mutong.jcommunity.service.LikeService;
 import com.mutong.jcommunity.service.UserService;
+import com.mutong.jcommunity.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +24,14 @@ import java.util.Map;
  * @time_complexity: O()
  */
 @Controller
-public class IndexController {
+public class IndexController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LikeService likeService;
     //去/index目录下
     @GetMapping("/index")
     //返回一个字符串
@@ -48,11 +52,18 @@ public class IndexController {
                 //根据每一个discusspost得到userid,然后根据userid得到整个user
                 User user = userService.findUserById(post.getUserId());
                 map.put("user",user);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST,post.getId());
+                map.put("likeCount",likeCount);
                 discussPosts.add(map);
             }
         }
         model.addAttribute("discussPosts",discussPosts);
 
         return "/index";
+    }
+
+    @GetMapping("/error")
+    public String getErrorPage(){
+        return "/error/500";
     }
 }

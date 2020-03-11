@@ -2,6 +2,7 @@ package com.mutong.jcommunity.controller;
 
 import com.mutong.jcommunity.annotation.LoginRequired;
 import com.mutong.jcommunity.model.User;
+import com.mutong.jcommunity.service.LikeService;
 import com.mutong.jcommunity.service.UserService;
 import com.mutong.jcommunity.util.CommunityUtil;
 import com.mutong.jcommunity.util.HostHolder;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +47,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private HostHolder hostHolder;
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @GetMapping("/setting")
@@ -113,4 +113,19 @@ public class UserController {
             logger.error("读取头像失败 : "+ e.getMessage());
         }
     }
+
+    @RequestMapping(value = "/profile/{userId}",method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId")int userId, Model model){
+        User user = userService.findUserById(userId);
+        if (user == null){
+            throw new RuntimeException("该用户不存在");
+        }
+        //用户
+        model.addAttribute("user",user);
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount",likeCount);
+
+        return "/site/profile";
+    }
+
 }

@@ -28,25 +28,7 @@ public class SensitiveFilter {
     private static final String REPLACEMENT = "***";
     //根节点
     private TrieNode rootNode = new TrieNode();
-    /**
-     * 初始化构造器
-     */
-    @PostConstruct
-    public void init(){
 
-        try (
-                InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("sensitive-works.txt");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            ) {
-            String keyword;
-            while ((keyword = reader.readLine()) != null ){
-                //添加到前缀树
-                this.addKeyword(keyword);
-            }
-        }catch (Exception e) {
-            logger.error("加载敏感词操作异常" + e.getMessage());
-        }
-    }
 
     /**
      * 将一个敏感词添加到前缀树上去
@@ -134,7 +116,7 @@ public class SensitiveFilter {
      */
     private boolean isSymbol(Character c){
         //0x2E80-0x9FFF 中文字符
-        return CharUtils.isAsciiAlphanumeric(c) && (c < 0x2E80 || c > 0x9FFF );
+        return CharUtils.isAsciiAlphanumeric(c) && (c < 0x2E80 || c > 0x9FFF);
     }
 
     /**
@@ -159,6 +141,26 @@ public class SensitiveFilter {
         //获取子节点
         public TrieNode getSubNode(Character c){
             return subNodes.get(c);
+        }
+    }
+
+    /**
+     * 初始化构造器
+     */
+    @PostConstruct
+    public void init(){
+
+        try (
+                InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("sensitive-works.txt");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        ) {
+            String keyword;
+            while ((keyword = reader.readLine()) != null ){
+                //添加到前缀树
+                this.addKeyword(keyword);
+            }
+        }catch (Exception e) {
+            logger.error("加载敏感词操作异常" + e.getMessage());
         }
     }
 }

@@ -41,9 +41,9 @@ public class CommentService implements CommunityConstant {
      * @param comment
      * @return
      */
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,rollbackFor=Exception.class)
     public int addComment(Comment comment){
-        if (comment == null){
+        if (comment==null && comment.equals("") ){
             throw new IllegalArgumentException("参数不能为空");
         }
         //添加评论
@@ -58,6 +58,8 @@ public class CommentService implements CommunityConstant {
             //根据id更新帖子的评论的数量
             discussPostService.updateCommentCount(comment.getEntityId() , count);
         }
+
+
 
         return -1;
     }

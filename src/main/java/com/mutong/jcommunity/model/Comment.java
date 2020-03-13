@@ -11,7 +11,6 @@ import java.util.Date;
  * @time_complexity: O()
  */
 @Data
-
 public class Comment {
     private int id;
     private int userId;

@@ -21,9 +21,9 @@ public class LikeService {
 
     /**
      * 点赞
-     * @param userId
-     * @param entityType
-     * @param entityId
+     * @param userId 谁在点赞
+     * @param entityType 给谁点赞,帖子还是评论
+     * @param entityId 评论或者帖子的id
      */
     public void like(int userId, int entityType, int entityId, int entityUserId){
         redisTemplate.execute(new SessionCallback() {

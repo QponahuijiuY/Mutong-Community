@@ -29,15 +29,17 @@ public class LikeService {
         redisTemplate.execute(new SessionCallback() {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
+                //点赞的实体
                 String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType,entityId);
                 String userLikeKey = RedisKeyUtil.getUserLikeKey(entityUserId);
+                //判断用户在不在当前的集合里面,在集合里面,说明用户已经点赞了,没有说明没有点赞
                 boolean isMember = redisTemplate.opsForSet().isMember(entityLikeKey,userId);
                 operations.multi();
                 if (isMember){
                     operations.opsForSet().remove(entityLikeKey,userId);
                     operations.opsForValue().decrement(userLikeKey);
                 } else {
-                    operations.opsForSet().add(entityLikeKey,userId);
+                    Long add = operations.opsForSet().add(entityLikeKey, userId);
                     operations.opsForValue().increment(userLikeKey);
                 }
                 return operations.exec();
@@ -64,6 +66,7 @@ public class LikeService {
      * @return
      */
     public int findEntityLikeStatus(int userId, int entityType, int entityId){
+        //判断entityLikeKey和userid是否在一块,在,说明你用户已经点赞了,没有说明用户还没有点赞
         String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType,entityId);
         return redisTemplate.opsForSet().isMember(entityLikeKey,userId) ? 1 : 0;
     }

@@ -25,16 +25,19 @@ public class FollowService implements CommunityConstant {
 
     @Autowired
     private UserService userService;
+
     public void follow(int userId ,int entityType, int entityId){
         redisTemplate.execute(new SessionCallback() {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
+                //我关注别人的key:我的id+关注的类型
                 String followeeKey = RedisKeyUtil.getFolloweeKey(userId,entityType);
+                //我的粉丝的key:粉丝的类型+粉丝的id
                 String followerKey = RedisKeyUtil.getFollowerKey(entityType,entityId);
                 operations.multi();
-                operations.opsForSet().add(followeeKey,entityId,System.currentTimeMillis());
-                operations.opsForSet().add(followerKey,userId,System.currentTimeMillis());
-                return null;
+                operations.opsForZSet().add(followeeKey, entityId, System.currentTimeMillis());
+                operations.opsForZSet().add(followerKey,userId,System.currentTimeMillis());
+                return operations.exec();
             }
         });
     }
@@ -46,9 +49,9 @@ public class FollowService implements CommunityConstant {
                 String followeeKey = RedisKeyUtil.getFolloweeKey(userId,entityType);
                 String followerKey = RedisKeyUtil.getFollowerKey(entityType,entityId);
                 operations.multi();
-                operations.opsForSet().remove(followeeKey,entityId);
-                operations.opsForSet().remove(followerKey,userId);
-                return null;
+                operations.opsForZSet().remove(followeeKey,entityId);
+                operations.opsForZSet().remove(followerKey,userId);
+                return operations.exec();
             }
         });
     }

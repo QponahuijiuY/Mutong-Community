@@ -32,6 +32,8 @@ public class FollowController implements CommunityConstant{
     private HostHolder hostHolder;
     @Autowired
     private UserService userService;
+
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
@@ -51,6 +53,9 @@ public class FollowController implements CommunityConstant{
 
         return CommunityUtil.getJSONString(0, "已取消关注!");
     }
+
+
+
     @RequestMapping(value = "/followees/{userId}",method = RequestMethod.GET)
     public String getFollowees(@PathVariable("userId")int userId, Page page, Model model){
         User user = userService.findUserById(userId);
@@ -72,6 +77,9 @@ public class FollowController implements CommunityConstant{
 
         return "/site/followee";
     }
+
+
+
     @RequestMapping(path = "/followers/{userId}", method = RequestMethod.GET)
     public String getFollowers(@PathVariable("userId") int userId, Page page, Model model) {
         User user = userService.findUserById(userId);
@@ -99,7 +107,6 @@ public class FollowController implements CommunityConstant{
         if (hostHolder.getUser() == null) {
             return false;
         }
-
         return followService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_USER, userId);
     }
 }

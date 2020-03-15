@@ -10,9 +10,9 @@ public class RedisKeyUtil {
 
     private static final String SPLIT = ":";
     private static final String PREFIX_ENTITY_LIKE = "like:entity";//点赞评论和帖子1代表
-    private static final String PREFIX_USER_LIKE = "like:user";//
-    private static final String PREFIX_FOLLOWEE = "followee";//被关注
-    private static final String PREFIX_FOLLOWER = "follower";//粉丝
+    private static final String PREFIX_USER_LIKE = "like:user";//某人获得的点赞
+    private static final String PREFIX_FOLLOWEE = "followee";//被关注,我关注别人
+    private static final String PREFIX_FOLLOWER = "follower";//粉丝,别人关注我
 
     private static final String PREFIX_KAPTCHA = "kaptcha";
     private static final String PREFIX_TICKET = "ticket";
@@ -20,7 +20,7 @@ public class RedisKeyUtil {
     /**
      * 某个实体的赞
      * @param entityType 1代表帖子,  2代表评论
-     * @param entityId
+     * @param entityId 帖子id,或者评论id
      * @return
      */
     public static String getEntityLikeKey(int entityType, int entityId){
@@ -40,7 +40,7 @@ public class RedisKeyUtil {
     }
 
     /**
-     * 某个用户关注的实体,我关注别人
+     * 某个用户关注的实体,我关注别人,某个用于点赞了实体
      * @param userId 用户id,指明了谁在关注
      * @param entityType 1点赞帖子, 2点赞评论
      * @return

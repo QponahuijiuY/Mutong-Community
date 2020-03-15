@@ -36,11 +36,6 @@ public class CommentService implements CommunityConstant {
         return commentMapper.selectCommentByEntity(entityType,entityId);
     }
 
-    /**
-     * 添加评论,且增加评论数量
-     * @param comment
-     * @return
-     */
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED,rollbackFor=Exception.class)
     public int addComment(Comment comment){
         if (comment==null && comment.equals("") ){
@@ -62,5 +57,9 @@ public class CommentService implements CommunityConstant {
 
 
         return -1;
+    }
+
+    public Comment findCommentById(int id) {
+        return commentMapper.selectCommentById(id);
     }
 }

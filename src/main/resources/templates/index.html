@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="http://i1.fuimg.com/712851/6b47931100b69f2b.jpg"/>
+	<link rel="icon" href="http://i2.tiimg.com/712851/6df23a8ac9883069.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<title>木同社区-首页</title>
@@ -30,7 +30,7 @@
 							<a class="nav-link" href="http://Github.com/QponahuijiuY">Github</a>
 						</li>
 						<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser!=null}">
-							<a class="nav-link position-relative" th:href="@{/letter/list}">消息<span class="badge badge-danger">12</span></a>
+							<a class="nav-link position-relative" th:href="@{/letter/list}">消息<span class="badge badge-danger" th:text="${allUnreadCount!=0?allUnreadCount:''}">12</span></a>
 						</li>
 						<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser==null}">
 							<a class="nav-link" th:href="@{/register}">注册</a>

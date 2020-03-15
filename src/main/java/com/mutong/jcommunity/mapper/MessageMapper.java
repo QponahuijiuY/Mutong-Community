@@ -59,7 +59,7 @@ public interface MessageMapper {
      * @param message
      * @return
      */
-    int insertMessage(@Param("message") Message message);
+    int insertMessage(Message message);
 
     /**
      * 修改消息的状态
@@ -69,4 +69,29 @@ public interface MessageMapper {
      */
     int updateStatus(@Param("ids") List<Integer> ids, @Param("status") int status);
 
+    /**
+     * 查询某个主题下的最新通知
+     * @param userId
+     * @param topic
+     * @return
+     */
+    Message selectLatesNotice(@Param("userId")int userId, @Param("topic")String topic);
+
+    /**
+     * 查询某个主题所包含的通知数量
+     * @param userId
+     * @param topic
+     * @return
+     */
+    int selectNoticeCount(@Param("userId")int userId,@Param("topic") String topic);
+
+    /**
+     * 查询未读的方法
+     * @param userId
+     * @param topic
+     * @return
+     */
+    int selectNoticeUnreadCount(@Param("userId") int userId, @Param("topic") String topic);
+
+    List<Message> selectNotices(@Param("userId")int userId, @Param("topic")String topic,@Param("offset") int offset, @Param("limit") int limit);
 }

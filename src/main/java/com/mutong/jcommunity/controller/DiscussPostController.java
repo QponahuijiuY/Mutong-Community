@@ -1,7 +1,9 @@
 package com.mutong.jcommunity.controller;
 
+import com.mutong.jcommunity.event.EventProducer;
 import com.mutong.jcommunity.model.Comment;
 import com.mutong.jcommunity.model.DiscussPost;
+import com.mutong.jcommunity.model.Event;
 import com.mutong.jcommunity.model.User;
 import com.mutong.jcommunity.provider.Page;
 import com.mutong.jcommunity.service.CommentService;
@@ -41,7 +43,8 @@ public class DiscussPostController implements CommunityConstant {
     private CommentService commentService;
     @Autowired
     private LikeService likeService;
-
+    @Autowired
+    private EventProducer eventProducer;
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title , String content){
@@ -55,7 +58,17 @@ public class DiscussPostController implements CommunityConstant {
         post.setContent(content);
         post.setCreateTime(new Date());
         discussPostService.addDiscussPost(post);
-        return CommunityUtil.getJSONString(0,"发布成功!");
+
+        // 触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(post.getId());
+        eventProducer.fireEvent(event);
+
+        // 报错的情况,将来统一处理.
+        return CommunityUtil.getJSONString(0, "发布成功!");
     }
 
 

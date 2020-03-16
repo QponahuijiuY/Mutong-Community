@@ -61,6 +61,8 @@ public interface CommunityConstant {
      */
     String TOPIC_LIKE = "like";
 
+    String TOPIC_PUBLISH = "publish";
+
     /**
      * 系统用户id
      */

@@ -1,8 +1,11 @@
 package com.mutong.jcommunity.event;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mutong.jcommunity.model.DiscussPost;
 import com.mutong.jcommunity.model.Event;
 import com.mutong.jcommunity.model.Message;
+import com.mutong.jcommunity.service.DiscussPostService;
+import com.mutong.jcommunity.service.ElasticSearchService;
 import com.mutong.jcommunity.service.MessageService;
 import com.mutong.jcommunity.util.CommunityConstant;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -27,6 +30,10 @@ public class EventConsumer implements CommunityConstant {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private DiscussPostService discussPostService;
+    @Autowired
+    private ElasticSearchService elasticSearchService;
     @KafkaListener(topics = {TOPIC_COMMENT,TOPIC_FOLLOW,TOPIC_LIKE})
     public void handlerCommentMessage(ConsumerRecord record){
         if (record == null || record.value() == null){
@@ -55,6 +62,22 @@ public class EventConsumer implements CommunityConstant {
         }
         message.setContent(JSONObject.toJSONString(content));
         messageService.addMessage(message);
+    }
 
+    //消费发帖事件
+    @KafkaListener(topics = {TOPIC_PUBLISH})
+    public void handlerPublicMessage(ConsumerRecord record){
+        if (record == null || record.value() == null){
+            logger.error("消息内容为空");
+            return;
+        }
+        Event event = JSONObject.parseObject(record.value().toString(),Event.class);
+        if (event == null){
+            logger.error("消息格式错误");
+            return;
+        }
+
+        DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
+        elasticSearchService.saveDiscussPost(post);
     }
 }

@@ -10,14 +10,12 @@ import org.apache.maven.surefire.shade.org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.mutong.jcommunity.util.CommunityConstant.*;
@@ -269,8 +267,23 @@ public class UserService {
         redisTemplate.delete(redisKey);
     }
 
+    public Collection<? extends GrantedAuthority> getAuthorities(int userId){
+        User user = this.findUserById(userId);
+        List<GrantedAuthority> list = new ArrayList<>();
+        list.add(new GrantedAuthority(){
 
-
-
-
+            @Override
+            public String getAuthority() {
+                switch (user.getType()){
+                    case 1 :
+                        return AUTGORITY_ADMIN;
+                    case 2 :
+                        return AUTGORITY_MODERATOR;
+                    default :
+                        return AUTGORITY_USER;
+                }
+            }
+        });
+        return list;
+    }
 }

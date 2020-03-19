@@ -17,6 +17,12 @@ public class RedisKeyUtil {
     private static final String PREFIX_KAPTCHA = "kaptcha";
     private static final String PREFIX_TICKET = "ticket";
     private static final String PREFIX_USER = "user";
+
+
+    private static final String PREFIX_UV = "uv";
+    private static final String PREFIX_DAU = "dau";
+
+    private static final String PREFIX_POST = "post";
     /**
      * 某个实体的赞
      * @param entityType 1代表帖子,  2代表评论
@@ -81,9 +87,49 @@ public class RedisKeyUtil {
         return PREFIX_TICKET + SPLIT + ticket;
     }
 
-
+    /**
+     * 用户
+     * @param userId
+     * @return
+     */
     public static String getUserKey(int userId){
         return PREFIX_USER + SPLIT + userId;
     }
+
+    /**
+     * 单日uv
+     * @param date
+     * @return
+     */
+    public static String getUVKey(String date){
+        return PREFIX_UV + SPLIT + date;
+    }
+
+
+    /**
+     * 区间uv
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static String getUVKey(String startDate, String endDate){
+        return PREFIX_UV + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    public static String getDAUKey(String date){
+        return PREFIX_DAU + SPLIT + date;
+    }
+
+    public static String getDAUKey(String startDate, String endDate){
+        return PREFIX_DAU + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    //帖子分数
+    public static String getPostScoreKey(){
+        return PREFIX_POST + SPLIT + "score";
+    }
+
+
+
 }
 

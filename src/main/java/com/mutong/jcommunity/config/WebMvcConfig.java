@@ -1,5 +1,6 @@
 package com.mutong.jcommunity.config;
 
+import com.mutong.jcommunity.interceptor.DateInterceptor;
 import com.mutong.jcommunity.interceptor.LoginTicketInterceptor;
 import com.mutong.jcommunity.interceptor.MessageInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private MessageInterceptor messageInterceptor;
+
+    @Autowired
+    private DateInterceptor dateInterceptor;
 //    @Autowired
 //    private LoginRequiredInterceptor loginRequiredInterceptor;
     @Override
@@ -32,6 +36,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
 
         registry.addInterceptor(messageInterceptor)
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
+        registry.addInterceptor(dateInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
 
     }

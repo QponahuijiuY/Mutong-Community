@@ -24,7 +24,7 @@ public interface DiscussPostMapper {
      * @param limit 终止页码
      * @return 一个页面存放在list集合里面
      */
-    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId,@Param("offset")  int offset ,@Param("limit")  int limit);
+    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId,@Param("offset")  int offset ,@Param("limit")  int limit,@Param("orderModel") int orderModel);
 
     //@Param用于给参数取别名,如果只有一个参数,并且在<if>里面使用,则必须使用别名
 
@@ -74,4 +74,9 @@ public interface DiscussPostMapper {
      * @return
      */
     int updateStatus(@Param("id") int id, @Param("status")int status);
- }
+
+
+    int updateScore(@Param("id") int id, @Param("score")double score);
+
+
+}

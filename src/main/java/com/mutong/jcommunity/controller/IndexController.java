@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +39,13 @@ public class IndexController implements CommunityConstant {
     @GetMapping("/index")
     //返回一个字符串
     //@ResponseBody
-    public String getIndexPage(Model model , Page page){
+    public String getIndexPage(Model model , Page page, @RequestParam(name = "orderModel",defaultValue = "0") int orderModel){
         //方法调用之前,SpringMVC会自动实例化Model和Page,并且将page自动注入给Model
         //所以在thymeleaf中可以直接访问Page对象中的数据.
         page.setRows(discussPostService.findDiscussPostRows(0));
-        page.setPath("/index");
+        page.setPath("/index?orderModel="+orderModel);
         //list返回一个查询列表
-        List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit());
+        List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit(),orderModel);
         List<Map<String, Object>> discussPosts = new ArrayList<>();
         if (list != null){
             //遍历得到每一个discusspost
@@ -60,6 +61,7 @@ public class IndexController implements CommunityConstant {
             }
         }
         model.addAttribute("discussPosts",discussPosts);
+        model.addAttribute("orderModel",orderModel);
 
         return "/index";
     }

@@ -58,10 +58,10 @@ public class ElasticSearchTests {
     @Test
     public void testInsertAll(){
         //一次插入所有的数据
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(111,0,100));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(111,0,100,0));
     }
 
     @Test

@@ -1,13 +1,23 @@
 package com.mutong.jcommunity.service;
 
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.mutong.jcommunity.mapper.DiscussPostMapper;
 import com.mutong.jcommunity.model.DiscussPost;
 import com.mutong.jcommunity.util.SensitiveFilter;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @description:
@@ -18,10 +28,65 @@ import java.util.List;
 @Service
 public class DiscussPostService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DiscussPostService.class);
     @Autowired
     private DiscussPostMapper discussPostMapper;
     @Autowired
     private SensitiveFilter sensitiveFilter;
+
+    @Value("${caffeine.posts.max-size}")
+    private int maxSize;
+    @Value("${caffeine.posts.expire-seconds}")
+    private int expireSecond;
+
+    //帖子列表缓存
+    private LoadingCache<String,List<DiscussPost>> postListCache;
+
+    //帖子总数患处
+    private LoadingCache<Integer,Integer> postRowsCache;
+
+    @PostConstruct
+    public void init(){
+
+        postListCache = Caffeine.newBuilder()
+                .maximumSize(maxSize)
+                .expireAfterWrite(expireSecond, TimeUnit.SECONDS)
+                .build(new CacheLoader<String, List<DiscussPost>>() {
+                    @Nullable
+                    @Override
+                    public List<DiscussPost> load(@NonNull String key) throws Exception {
+                        if (key == null || key.length() == 0){
+                            throw new IllegalArgumentException("参数错误!");
+                        }
+                        String[] split = key.split(":");
+                        if (split == null || split.length != 2){
+                            throw new IllegalArgumentException("参数错误!");
+                        }
+                        int offset = Integer.valueOf(split[0]);
+                        int limit = Integer.valueOf(split[1]);
+                        logger.debug("从数据库里面取帖子数据");
+
+                        return discussPostMapper.selectDiscussPosts(0,offset,limit,1);
+                    }
+                });
+
+        //初始化总行数的缓存
+        postRowsCache = Caffeine.newBuilder()
+                .maximumSize(maxSize)
+                .expireAfterWrite(expireSecond,TimeUnit.SECONDS)
+                .build(new CacheLoader<Integer, Integer>() {
+                    @Nullable
+                    @Override
+                    public Integer load(@NonNull Integer key) throws Exception {
+                        logger.debug("从数据库里面取总行数数据");
+                        return discussPostMapper.selectDiscussPostRows(key);
+                    }
+                });
+    }
+
+
+
+
 
     /**
      * 查询固定行数的讨论到页面上
@@ -30,8 +95,12 @@ public class DiscussPostService {
      * @param limit
      * @return
      */
-    public List<DiscussPost> findDiscussPosts( int userId,  int offset ,  int limit){
-        return discussPostMapper.selectDiscussPosts(userId, offset, limit);
+    public List<DiscussPost> findDiscussPosts( int userId,  int offset ,  int limit, int orderModel){
+        if (userId == 0 && orderModel == 1){
+            return postListCache.get(offset + ":" + limit);
+        }
+        logger.debug("从数据库里面取帖子数据");
+        return discussPostMapper.selectDiscussPosts(userId, offset, limit,orderModel);
     }
 
     /**
@@ -40,6 +109,10 @@ public class DiscussPostService {
      * @return
      */
     public int findDiscussPostRows(int userId){
+        if (userId == 0){
+            return postRowsCache.get(userId);
+        }
+        logger.debug("从数据库里面取总行数数据");
         return discussPostMapper.selectDiscussPostRows(userId);
     }
 
@@ -88,4 +161,9 @@ public class DiscussPostService {
     public int updateStatus(int id ,int status){
         return discussPostMapper.updateStatus(id,status);
     }
+
+    public int updateScore(int id ,double score){
+        return discussPostMapper.updateScore(id,score);
+    }
+
 }

@@ -87,7 +87,6 @@ public class UserController implements CommunityConstant {
         }
         //更新用户头像路径(web)访问路径
         User user = hostHolder.getUser();
-        System.out.println(fileName);
         //http://localhost:8080/jcommunity/user/header
         String headUrl = domian + contextPath + "/user/header/"+fileName;
         userService.updateHeader(user.getId(),headUrl);

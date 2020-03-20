@@ -104,8 +104,6 @@ public class RedisKeyUtil {
     public static String getUVKey(String date){
         return PREFIX_UV + SPLIT + date;
     }
-
-
     /**
      * 区间uv
      * @param startDate

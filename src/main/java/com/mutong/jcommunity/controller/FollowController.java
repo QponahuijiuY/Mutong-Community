@@ -114,6 +114,7 @@ public class FollowController implements CommunityConstant{
 
         return "/site/follower";
     }
+
     private boolean hasFollowed(int userId) {
         if (hostHolder.getUser() == null) {
             return false;

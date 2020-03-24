@@ -50,4 +50,5 @@ public interface CommentMapper {
     Comment selectCommentById(@Param("id") int id);
 
 
+    int selectCountComment();
 }

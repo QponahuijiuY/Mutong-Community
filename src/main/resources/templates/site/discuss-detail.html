@@ -169,7 +169,7 @@
 										</ul>
 
 										<div th:id="|huifu-${rvoStat.count}|" class="mt-4 collapse">
-											<form>
+											<form method="post" th:action="@{|/comment/add/${post.id}|}">
 												<div>
 													<input type="text" class="input-size" name="content" th:placeholder="|回复${rvo.user.username}" />
 													<input type="hidden" name="entityType" value="2">

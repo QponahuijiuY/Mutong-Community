@@ -35,6 +35,11 @@ public class IndexController implements CommunityConstant {
     private UserService userService;
     @Autowired
     private LikeService likeService;
+    @GetMapping("/")
+    public String root(){
+        return "forward:/index";
+    }
+
     //去/index目录下
     @GetMapping("/index")
     //返回一个字符串

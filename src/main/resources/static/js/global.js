@@ -1,5 +1,5 @@
 
-var Context_Path = "/jcommunity";
+var Context_Path = "";
 
 window.alert = function(message) {
 	if(!$(".alert-box").length) {

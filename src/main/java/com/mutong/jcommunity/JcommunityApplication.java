@@ -1,3 +1,4 @@
+
 package com.mutong.jcommunity;
 
 import org.springframework.boot.SpringApplication;

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * @description:持有用户信息,用于代替session对象
  * @Author: Mutong
- * @Date: 2020-03-02 13:50
+ * @Date: 2020-06-12 13:50
  * @time_complexity: O()
  */
 @Component

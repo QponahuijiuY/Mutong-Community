@@ -23,7 +23,7 @@ import static com.mutong.jcommunity.util.CommunityConstant.*;
 /**
  * @description:
  * @Author: Mutong
- * @Date: 2020-02-29 15:25
+ * @Date: 2020-03-11 15:25
  * @time_complexity: O()
  */
 @Service
@@ -203,6 +203,9 @@ public class UserService {
     public void logout(String ticket) {
 
 //        loginTicketMapper.updateStatus(ticket, 1);
+
+
+
         String redisKey = RedisKeyUtil.getTicketKey(ticket);
         LoginTicket loginTicket = (LoginTicket) redisTemplate.opsForValue().get(redisKey);
         loginTicket.setStatus(1);

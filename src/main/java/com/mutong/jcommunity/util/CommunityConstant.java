@@ -3,7 +3,7 @@ package com.mutong.jcommunity.util;
 /**
  * @description:
  * @Author: Mutong
- * @Date: 2020-03-01 16:30
+ * @Date: 2020-06-11 16:30
  * @time_complexity: O()
  */
 public interface CommunityConstant {
